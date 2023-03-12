@@ -6,7 +6,7 @@ fontName :str = "Freshman"
 
 name :str = "Myles"
 initial :str = "S"
-title :str = "Programmer / Driver Team"
+title :str = "Programmer / Drive Team"
 teamNumber :str = "3173"
 nameFontSize :int = 140
 titleFontSize :int = 70
@@ -50,25 +50,6 @@ nameTag.line(xy=[(horizontalLineSideSpacing, backgroundHeight/2),
                    fill=yellow, 
                    width=6)
 
-# Draw title
-titleTag = ImageDraw.Draw(background)
-titleBounds = titleTag.textbbox(xy=(0, 0), 
-                        text=title,
-                        font=titleFont)
-titleBoundsWidth = titleBounds.__getitem__(2)
-titleBoundsHeight = titleBounds.__getitem__(3)
-titleTag.text(xy=(horizontalLineSideSpacing, (backgroundHeight/2) + 20), 
-             text=title, 
-             fill=yellow, 
-             font=titleFont,
-             align="left", 
-             direction=None, 
-             features=None, 
-             language=None, 
-             stroke_width=0, 
-             stroke_fill=None, 
-             embedded_color=False)
-
 # Draw number
 teamNumberTag = ImageDraw.Draw(background)
 numberBounds = teamNumberTag.textbbox(xy=(0, 0), 
@@ -88,15 +69,32 @@ teamNumberTag.text(xy=((backgroundWidth - horizontalLineSideSpacing) - numberBou
              stroke_fill=None, 
              embedded_color=False)
 
-#Draw long vertical line underneath name
+#Draw long vertical line between title and number
 numberBoundsX = (backgroundWidth - horizontalLineSideSpacing) - numberBoundsWidth
-titleBoundsX = horizontalLineSideSpacing
-titleNumberSpaceDifference = numberBoundsX - (titleBoundsX + titleBoundsWidth)
-titleNumberCenter = (titleBoundsX + titleBoundsWidth) + (titleNumberSpaceDifference/2)
-nameTag.line(xy=[(titleNumberCenter, backgroundHeight/2 + 20), 
-                  (titleNumberCenter, backgroundHeight/2 + 85)], 
+nameTag.line(xy=[((numberBoundsX - 4) - 20, backgroundHeight/2 + 20), 
+                  ((numberBoundsX - 4) - 20, backgroundHeight/2 + 85)], 
                    fill=yellow, 
                    width=4)
+                   
+# Draw title
+numberBoundsX = (backgroundWidth - horizontalLineSideSpacing) - numberBoundsWidth
+titleTag = ImageDraw.Draw(background)
+titleBounds = titleTag.textbbox(xy=(0, 0), 
+                        text=title,
+                        font=titleFont)
+titleBoundsWidth = titleBounds.__getitem__(2)
+titleBoundsHeight = titleBounds.__getitem__(3)
+titleTag.text(xy=((numberBoundsX - titleBoundsWidth) - 40, (backgroundHeight/2) + 20), 
+             text=title, 
+             fill=yellow, 
+             font=titleFont,
+             align="left", 
+             direction=None, 
+             features=None, 
+             language=None, 
+             stroke_width=0, 
+             stroke_fill=None, 
+             embedded_color=False)
 
 print(nameBounds)
 print(titleBounds)
@@ -104,4 +102,4 @@ print(numberBounds)
 
 background.show()
 image = background
-image.save("test", format="png")
+image.save(currentDir + "\\Output\\test.png", format="png")
