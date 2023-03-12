@@ -1,14 +1,144 @@
-from PIL import Image, ImageDraw, ImageFont, ImageColor
+from PIL import Image, ImageDraw, ImageFont
+from colorama import Fore, Back, Style
+import keyboard
+import time
 import os 
 
 currentDir :str = os.getcwd()
+listPath :str = ""
+backgroundPath :str = ""
+fontPath :str = ""
 
-for i in range(0, 100):
+def chooseList():
+    tagListsPath = currentDir + "\\Tag Lists"
+    lists = []
+    for filename in os.listdir(tagListsPath):
+        if filename.endswith('.txt'):
+            fileNameWithoutExt = os.path.splitext(filename)[0]
+            lists.append(fileNameWithoutExt)
+    
+    selectedIndex = 0
+    menuReprint = True
+    while True:
+        if menuReprint == True:
+            os.system('cls')
+            print(Fore.YELLOW + "Use the arrow keys to navigate.\n\nChoose a name list:\n" + Style.RESET_ALL)
+            for i in range(lists.__len__()):
+                if (i == selectedIndex):
+                    print(Back.WHITE + "[" + str(i) + "] " + lists[i] + Style.RESET_ALL)
+                else:
+                    print("[" + str(i) + "] " + lists[i])
+        if keyboard.is_pressed('down'):
+            if (selectedIndex != lists.__len__() - 1):
+                selectedIndex += 1
+                menuReprint = True
+                time.sleep(0.15)
+        elif keyboard.is_pressed('up'):
+            if (selectedIndex != 0):
+                selectedIndex -= 1
+                menuReprint = True
+                time.sleep(0.15)
+        elif keyboard.is_pressed('enter'):
+            os.system('cls')
+            time.sleep(1)
+            return currentDir + "\\Tag Lists\\" + lists[selectedIndex] + ".txt"
+        else:
+            menuReprint = False
 
-    fontName :str = "Freshman"
-    name :str = "Myles"
-    initial :str = "S"
-    title :str = "Programmer"
+
+def chooseBackground():
+    backgroundPaths = currentDir + "\\Backgrounds"
+    backgrounds = []
+    for filename in os.listdir(backgroundPaths):
+        if filename.endswith('.png'):
+            fileNameWithoutExt = os.path.splitext(filename)[0]
+            backgrounds.append(fileNameWithoutExt)
+    
+    selectedIndex = 0
+    menuReprint = True
+    while True:
+        if menuReprint == True:
+            os.system('cls')
+            print(Fore.YELLOW + "Use the arrow keys to navigate.\n\nChoose a background image:\n" + Style.RESET_ALL)
+            for i in range(backgrounds.__len__()):
+                if (i == selectedIndex):
+                    print(Back.WHITE + "[" + str(i) + "] " + backgrounds[i] + Style.RESET_ALL)
+                else:
+                    print("[" + str(i) + "] " + backgrounds[i])
+        if keyboard.is_pressed('down'):
+            if (selectedIndex != backgrounds.__len__() - 1):
+                selectedIndex += 1
+                menuReprint = True
+                time.sleep(0.15)
+        elif keyboard.is_pressed('up'):
+            if (selectedIndex != 0):
+                selectedIndex -= 1
+                menuReprint = True
+                time.sleep(0.15)
+        elif keyboard.is_pressed('enter'):
+            os.system('cls')
+            time.sleep(1)
+            return currentDir + "\\Backgrounds\\" + backgrounds[selectedIndex] + ".png"
+        else:
+            menuReprint = False
+
+
+def chooseFontPath():
+    fontPath = currentDir + "\\Fonts"
+    fonts = []
+    for filename in os.listdir(fontPath):
+        if filename.endswith('.ttf'):
+            fileNameWithoutExt = os.path.splitext(filename)[0]
+            fonts.append(fileNameWithoutExt)
+    
+    selectedIndex = 0
+    menuReprint = True
+    while True:
+        if menuReprint == True:
+            os.system('cls')
+            print(Fore.YELLOW + "Use the arrow keys to navigate.\n\nChoose a font:\n" + Style.RESET_ALL)
+            for i in range(fonts.__len__()):
+                if (i == selectedIndex):
+                    print(Back.WHITE + "[" + str(i) + "] " + fonts[i] + Style.RESET_ALL)
+                else:
+                    print("[" + str(i) + "] " + fonts[i])
+        if keyboard.is_pressed('down'):
+            if (selectedIndex != fonts.__len__() - 1):
+                selectedIndex += 1
+                menuReprint = True
+                time.sleep(0.15)
+        elif keyboard.is_pressed('up'):
+            if (selectedIndex != 0):
+                selectedIndex -= 1
+                menuReprint = True
+                time.sleep(0.15)
+        elif keyboard.is_pressed('enter'):
+            os.system('cls')
+            time.sleep(1)
+            return currentDir + "\\Fonts\\" + fonts[selectedIndex] + ".ttf"
+        else:
+            menuReprint = False
+
+listPath = chooseList()
+backgroundPath = chooseBackground()
+fontPath = chooseFontPath()
+
+names = []
+initials = []
+titles = []
+
+with open(listPath, 'r') as file:
+    for line in file:
+        currLine = line.strip()
+        words = currLine.split(",")
+        names.append(words[0])
+        initials.append(words[1])
+        titles.append(words[2])
+
+for person in range(names.__len__()):
+    name :str = names[person]
+    initial :str = initials[person]
+    title :str = titles[person]
     space :str = "   "
     teamNumber :str = "3173"
     nameFontSize :int = 140
@@ -25,13 +155,13 @@ for i in range(0, 100):
         nameFontSize -= lettersOver * 5
 
     #Configure name font
-    nameFont = ImageFont.truetype(currentDir + "\\Fonts\\" + fontName + ".ttf", nameFontSize)
+    nameFont = ImageFont.truetype(fontPath, nameFontSize)
 
     #Configure title font
-    titleFont = ImageFont.truetype(currentDir + "\\Fonts\\" + fontName + ".ttf", titleFontSize)
+    titleFont = ImageFont.truetype(fontPath, titleFontSize)
 
     #Configure background
-    background = Image.open(currentDir + "\\Backgrounds\\igknighters_pin.png");
+    background = Image.open(backgroundPath);
     backgroundWidth = background.getbbox().__getitem__(2)
     backgroundHeight = background.getbbox().__getitem__(3)
 
@@ -113,9 +243,6 @@ for i in range(0, 100):
                     fill=yellow, 
                     width=4)
 
-    print(nameBounds)
-    print(titleBounds)
-    print(numberBounds)
-
     image = background
-    image.save(currentDir + "\\Output\\test" + str(i) + ".png", format="png")
+    image.save(currentDir + "\\Output\\" + str(names[person]) + ".png", format="png")
+    print("Saved " + names[person] + " to " + currentDir + "/Output")
